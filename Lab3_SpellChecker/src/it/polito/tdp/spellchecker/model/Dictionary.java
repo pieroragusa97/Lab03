@@ -12,21 +12,23 @@ public class Dictionary {
 	public void loadDictionary(String language) {
 		try {
 			if(language.compareTo("English")==0) {
-			FileReader fr=new FileReader("rsc/English.txt");
-		    BufferedReader br=new BufferedReader(fr);
-			String parola;
-			while((parola=br.readLine())!=null) {
-				parole.add(parola);
-			}
-			br.close();
+				parole.clear();  /*cancello tutto se no cambiando lingua aggiungo solo i termini del nuovo vocabolario*/
+			    FileReader fr=new FileReader("rsc/English.txt");
+		        BufferedReader br=new BufferedReader(fr);
+			    String parola;
+			    while((parola=br.readLine())!=null) {
+				     parole.add(parola);
+			    }
+			    br.close();
 			}
 			
 			else if(language.compareTo("Italian")==0) {
+				parole.clear();
 				FileReader fr=new FileReader("rsc/Italian.txt");
 			    BufferedReader br=new BufferedReader(fr);
 				String parola;
 				while((parola=br.readLine())!=null) {
-					parole.add(parola);
+					 parole.add(parola);
 				}
 				br.close();
 			}
@@ -38,11 +40,10 @@ public class Dictionary {
 	
 	public List<RichWord> spellCheckTest(List<String> inputTextList){
 		LinkedList<RichWord> parole_passate=new LinkedList<RichWord>();
-		List<String> parole_daPassare=inputTextList;
-		for(String s:parole_daPassare) {
+		for(String s:inputTextList) {
 			if(parole.contains(s)) {
-				parole_passate.add(new RichWord(s,true));
-			}
+				parole_passate.add(new RichWord(s,true));     /*salvo le parole in una lista, dando loro la correzione */
+			}                                                 /*e passando il valore boolean true o false */
 			else 
 				parole_passate.add(new RichWord(s,false));
 				
@@ -50,12 +51,5 @@ public class Dictionary {
 		return parole_passate;
 	}
 
-	public LinkedList<String> getParole() {
-		return parole;
-	}
-
-	public void setParole(LinkedList<String> parole) {
-		this.parole = parole;
-	}
 
 }

@@ -18,14 +18,14 @@ import javafx.event.ActionEvent;
 
 	public class SpellCheckerController {
 		ObservableList<String> comboBoxOpzioni=FXCollections.observableArrayList("English","Italian");
+		// Inserisco i valori che voglio dentro la combobox
 		
-		private Dictionary model;
+		private Dictionary model; // creo un model 
 		
 		public void setModel(Dictionary model) {
 			this.model = model;
 		}
 		
-
 		@FXML
 	    private ResourceBundle resources;
 
@@ -55,37 +55,39 @@ import javafx.event.ActionEvent;
 
 	    @FXML
 	    void doChoose(ActionEvent event) {
-	    	if(btnChoose.isArmed()) {
-	    		model.loadDictionary(btnChoose.getAccessibleText());
+	    	if(btnChoose.isShowing()) {      /*imparare bene i metodi per le combobox*/
+	    	 model.loadDictionary(btnChoose.getValue());  /* prendo la lingua selezionata*/
+	    	 //AreaErrori.appendText(model.getParole().get(14)); mi serve per controllare se inserisce le parole
 	    	}
-
-	    }
-
+        }
+	   
 	    @FXML
 	    void doClear(ActionEvent event) {
-
+	    	if(btnClearText.isArmed()) {
+	    		AreaErrori.clear();
+	    		AreaInserimento.clear();
+	    	}
 	    }
 
 	    @FXML
 	    void doSpellCheck(ActionEvent event) {
-	    	LinkedList<String> parole=new LinkedList<String>();
-	    	
-	    	//AreaInserimento.getText().replaceAll("!|\\£$%&/()=?^'{}[]ç°§@#;,.:-<>*/","");
-	    	AreaInserimento.getText().toLowerCase();
-	    	StringTokenizer st=new StringTokenizer(AreaInserimento.getText()," ");
-	    	String parola=st.nextToken();
-	    	parole.add(parola);
-	    	
-	    	LinkedList<RichWord> risultato=new LinkedList<RichWord>(model.spellCheckTest(parole));
-	    
-	        for(RichWord s: risultato) {
-	    		if(s.isStato()==false)
-	    			AreaErrori.appendText(s.getParola());
+	    	if(btnSpellCheck.isArmed()) {
+	    	    LinkedList<String> parole=new LinkedList<String>();
+	    	    AreaInserimento.getText().replaceAll("[.,\\/#!$%\\^&\\*;:{}=\\-_'()\\[\\]\"]","");
+	    	    AreaInserimento.getText().toLowerCase();
+	    	    StringTokenizer st=new StringTokenizer(AreaInserimento.getText()," ");
+	    	    
+	    	    while(st.hasMoreTokens()) {         /*controllo se ci sono altri elementi*/
+	    	        String parola=st.nextToken();
+	    	        parole.add(parola);
+	    	    }
+	    	    
+	            for(RichWord s: model.spellCheckTest(parole)) {      /*metto nell'areaErrori tutti gli elementi*/
+	    		    if(s.isStato()==false)                             /* che sono risultati sbagliati*/
+	    			     AreaErrori.appendText(s.getParola()+"\n");
+	    	    }
 	    	}
-	    	
-	    
-
-	    }
+        }
 
 	    @FXML
 	    void initialize() {
@@ -95,8 +97,7 @@ import javafx.event.ActionEvent;
 	        assert tempo != null : "fx:id=\"tempo\" was not injected: check your FXML file 'SpellChecker.fxml'.";
 	        assert errori != null : "fx:id=\"errori\" was not injected: check your FXML file 'SpellChecker.fxml'.";
 	        assert btnClearText != null : "fx:id=\"btnClearText\" was not injected: check your FXML file 'SpellChecker.fxml'.";
-            btnChoose.setValue("English");
-            btnChoose.setItems(comboBoxOpzioni);
+            btnChoose.setItems(comboBoxOpzioni);  /*inizializzo la combobox*/
 	    
 	    }
 	}
